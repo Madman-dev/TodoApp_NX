@@ -48,6 +48,10 @@ class FinishedController: UIViewController {
         
         completedTableView.reloadData()
     }
+    
+    deinit {
+        print("FinishedViewController이 화면에서 사라졌습니다.")
+    }
 }
 
 //MARK: - UITableViewDelegate

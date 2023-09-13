@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  TodoViewController.swift
 //  TodoApp
 //
 //  Created by Jack Lee on 2023/08/02.
@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class ViewController: UIViewController {
+class TodoViewController: UIViewController {
     
     //MARK: - Outlet 및 전역 변수 정리
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -269,11 +269,15 @@ class ViewController: UIViewController {
     @objc func keyboardWillHide(_ notification: NSNotification) {
         updateViewWithKeyboard(notification: notification, viewBottomConstraint: self.textFieldBottomConstraint!, keyboardWillShow: false)
     }
+    
+    deinit {
+        print("TodoViewController이 화면에서 사라졌습니다.")
+    }
 }
 
 //MARK: - UITableViewDataSource
 
-extension ViewController: UITableViewDataSource {
+extension TodoViewController: UITableViewDataSource {
     
     // 카테고리 구분
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -326,7 +330,7 @@ extension ViewController: UITableViewDataSource {
 }
 
 //MARK: - UITableViewDelegate
-extension ViewController: UITableViewDelegate {
+extension TodoViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "삭제하기") { (action, view, completionHandler) in
@@ -345,17 +349,17 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
-extension ViewController: UITextFieldDelegate {
+extension TodoViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         messageTextField.resignFirstResponder()
     }
 }
 
-extension ViewController: UICollectionViewDelegate {
+extension TodoViewController: UICollectionViewDelegate {
     
 }
 
-extension ViewController: UICollectionViewDataSource {
+extension TodoViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return Categories.allCases.count
     }
