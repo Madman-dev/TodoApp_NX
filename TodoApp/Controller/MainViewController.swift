@@ -40,6 +40,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .red
         setUI()
+        getFontName()
     }
     
     private func setUI() {
