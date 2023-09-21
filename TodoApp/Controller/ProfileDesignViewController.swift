@@ -6,9 +6,10 @@
 //
 
 import UIKit
-import SwiftUI
 
 class ProfileDesignViewController: UIViewController {
+    
+    let customTabBar = UITabBar()
     
     lazy var rightItem: UIBarButtonItem = {
         let image = UIImage(systemName: "line.3.horizontal")
@@ -168,8 +169,11 @@ class ProfileDesignViewController: UIViewController {
         let button = UIButton()
         let image = UIImage(systemName: "chevron.down")
         button.setImage(image, for: .normal)
-        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        button.frame.size = CGSize(width: 30, height: 30)
+//        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
+//        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
         button.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
         button.backgroundColor = .white
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.gray.cgColor
@@ -185,15 +189,61 @@ class ProfileDesignViewController: UIViewController {
         stack.axis = .horizontal
         stack.alignment = .leading
         stack.spacing = 8
-        stack.distribution = .fillEqually
+        stack.distribution = .fillProportionally
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
     
+    let firstGridButton: UIButton = {
+        let button = UIButton()
+        let image = UIImage(systemName: "squareshape.split.3x3")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        button.setImage(image, for: .normal)
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(gridButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
+    let emptyLabel: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    lazy var gridStack: UIStackView = {
+        let stack = UIStackView()
+        [firstGridButton, emptyLabel, emptyLabel].forEach{stack.addArrangedSubview($0)}
+        stack.axis = .horizontal
+        stack.alignment = .leading
+        stack.distribution = .fillProportionally
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    let flowLayout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        return layout
+    }()
+    
+    lazy var photoCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
+        collectionView.backgroundColor = .green
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.isScrollEnabled = true
+        collectionView.showsVerticalScrollIndicator = true
+        collectionView.register(ThumbnailCell.self, forCellWithReuseIdentifier: ThumbnailCell.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
     
     func setup() {
         setProfileLayer()
         setButtonLayer()
+        setGridLayer()
+        setTabBar()
     }
     
     func setProfileLayer() {
@@ -221,8 +271,43 @@ class ProfileDesignViewController: UIViewController {
             buttonStack.topAnchor.constraint(equalTo: profileStack.bottomAnchor, constant: 11),
         ])
     }
- 
     
+    func setGridLayer() {
+        [gridStack, photoCollectionView].forEach{view.addSubview($0)}
+        
+        NSLayoutConstraint.activate([
+            gridStack.topAnchor.constraint(equalTo: buttonStack.bottomAnchor, constant: 10),
+            gridStack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            gridStack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            photoCollectionView.topAnchor.constraint(equalTo: gridStack.bottomAnchor),
+            photoCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            photoCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            photoCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        ])
+    }
+    
+    func setTabBar() {
+        view.addSubview(customTabBar)
+        
+        let image = UIImage(systemName: "house")
+        let mainBarItem = UITabBarItem(title: "메인 화면", image: image, tag: 0)
+        
+        customTabBar.setItems([mainBarItem], animated: false)
+        customTabBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            customTabBar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            customTabBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            customTabBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            customTabBar.heightAnchor.constraint(equalToConstant: 84)
+        ])
+        customTabBar.delegate = self
+    }
+    
+    func handleTapBarItemTapped() {
+        navigationController?.popToRootViewController(animated: true)
+    }
+ 
     @objc func sideBarTapped() {
         print("사이드바 버튼이 눌렸습니다.")
     }
@@ -231,11 +316,14 @@ class ProfileDesignViewController: UIViewController {
         print("팔로우 버튼이 눌렸습니다.")
     }
     
+    @objc func gridButtonTapped() {
+        print("그리드 버튼이 눌렸습니다.")
+    }
+    
     deinit {
         print("ProfileDesignViewController이 화면에서 사라졌습니다.")
     }
 }
-
 
 //MARK: - ViewLoad 시점
 
@@ -260,20 +348,44 @@ extension ProfileDesignViewController {
     }
 }
 
-//MARK: - 스유 Preview
+extension ProfileDesignViewController: UICollectionViewDelegate {
+ 
+}
 
-// SwiftUI를 활용한 미리보기
-struct HomeViewController_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeVCReprsentable().edgesIgnoringSafeArea(.all)
+extension ProfileDesignViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 21
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCell.identifier, for: indexPath) as! ThumbnailCell
+/// 지금은 이미지를 돌고 있지만 cell에 들어가는 이미지는 1로 고정 -> the images are being rotated, yet the indexPath of the cells, the columns for individual cells aren't being changed. thus a single cell is being populated with the exact image.
+        let imageName = "picture-\(indexPath.item + 1)"
+        cell.setImage(image: imageName)
+        return cell
     }
 }
 
-struct HomeVCReprsentable: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        let ProfileDesignViewController = ProfileDesignViewController()
-        return UINavigationController(rootViewController: ProfileDesignViewController)
+//MARK: - UICollectionViewDelegateFlowLayout
+extension ProfileDesignViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width: CGFloat = (collectionView.frame.width - 4) / 3
+        return CGSize(width: width, height: width)
     }
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) { }
-    typealias UIViewControllerType = UIViewController
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 2
+    }
+}
+
+extension ProfileDesignViewController: UITabBarDelegate {
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        if item.tag == 0 {
+            handleTapBarItemTapped()
+        }
+    }
 }
