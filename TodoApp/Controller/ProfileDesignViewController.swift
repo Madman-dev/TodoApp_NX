@@ -8,23 +8,22 @@
 import UIKit
 
 class ProfileDesignViewController: UIViewController {
-    
     let customTabBar = UITabBar()
     
     lazy var rightItem: UIBarButtonItem = {
-        let image = UIImage(systemName: "line.3.horizontal")
+        let image = UIImage(named: "Menu")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(sideBarTapped))
         return button
     }()
     
     var profileImage: UIImageView = {
         let iv = UIImageView()
-        let image = UIImage(systemName: "person.fill")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        let image = UIImage(named: "UserPic")//?.withTintColor(.black, renderingMode: .alwaysOriginal)
         iv.image = image
         iv.clipsToBounds = true
-        iv.layer.borderWidth = 2
-        iv.layer.borderColor = UIColor.black.cgColor
-        iv.contentMode = .scaleAspectFit
+        iv.layer.borderWidth = 1
+        iv.layer.borderColor = UIColor.gray.cgColor
+        iv.contentMode = .scaleToFill
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
@@ -32,14 +31,14 @@ class ProfileDesignViewController: UIViewController {
     var postNumber: UILabel = {
         let label = UILabel()
         label.text = "0"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: "OpenSans", size: 16.5)
         return label
     }()
     
     var postLabel: UILabel = {
         let label = UILabel()
         label.text = "post"
-        label.font = UIFont.systemFont(ofSize: 15, weight: .light)
+        label.font = UIFont(name: "OpenSans", size: 14)
         return label
     }()
     
@@ -55,7 +54,7 @@ class ProfileDesignViewController: UIViewController {
     var followerNumber: UILabel = {
         let label = UILabel()
         label.text = "0"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: "Open Sans", size: 16.5)
         return label
     }()
     
@@ -332,11 +331,12 @@ extension ProfileDesignViewController {
         super.viewWillAppear(animated)
         self.title = "NabaeCamp"
         self.navigationItem.rightBarButtonItem = self.rightItem
+        self.navigationItem.setHidesBackButton(true, animated:true)
+        view.backgroundColor = .white
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         setup()
     }
     

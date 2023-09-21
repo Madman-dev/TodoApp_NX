@@ -32,3 +32,16 @@ extension UIImageView {
         }
     }
 }
+
+extension MainViewController {
+    func getFontName() {
+        for family in UIFont.familyNames {
+            let fontName: String = family as String
+            print("Family: \(fontName)")
+            
+            for name in UIFont.fontNames(forFamilyName: fontName) {
+                print("name: \(name as String)")
+            }
+        }
+    }
+}
