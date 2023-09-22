@@ -20,7 +20,9 @@ final class ThumbnailCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.gray
+        backgroundColor = UIColor.white
+        layer.borderWidth = 0.5
+        layer.borderColor = UIColor.black.cgColor
         setLayout()
     }
     

@@ -9,7 +9,7 @@ import UIKit
 
 class FinishedController: UIViewController {
 
-    //MARK: - Outlet 및 전역 변수 정리
+    //MARK: - UIComponent 선언
     private lazy var completedTableView = {
         let tableView = UITableView(frame: UIScreen.main.bounds, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +30,7 @@ class FinishedController: UIViewController {
         return imageView
     }()
     
+    //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -54,12 +55,12 @@ class FinishedController: UIViewController {
     }
 }
 
-//MARK: - UITableViewDelegate
+    //MARK: - UITableViewDelegate
 extension FinishedController: UITableViewDelegate {
     
 }
 
-//MARK: - UITableViewDataSource
+    //MARK: - UITableViewDataSource
 extension FinishedController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Categories.allCases.count
@@ -72,7 +73,6 @@ extension FinishedController: UITableViewDataSource {
         return cell
     }
     
-    // 선택한 cell 자동 deselect
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
