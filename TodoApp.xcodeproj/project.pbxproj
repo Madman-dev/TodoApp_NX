@@ -39,7 +39,8 @@
 		BD98BF7E2ABD1B7400D3B0F8 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD98BF7D2ABD1B7400D3B0F8 /* View.swift */; };
 		BDA2D0802AA074B400D20C00 /* Todo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA2D07E2AA074B400D20C00 /* Todo+CoreDataClass.swift */; };
 		BDA2D0812AA074B400D20C00 /* Todo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA2D07F2AA074B400D20C00 /* Todo+CoreDataProperties.swift */; };
-		BDDF36F92A85C4E600668ACF /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF36F82A85C4E600668ACF /* Errors.swift */; };
+		BDCCE4C12ABD7B6500DDE956 /* TodoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDCCE4C02ABD7B6500DDE956 /* TodoManager.swift */; };
+		BDDF36F92A85C4E600668ACF /* ErrorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDF36F82A85C4E600668ACF /* ErrorManager.swift */; };
 		BDE51BC12AB1998600C4B6C5 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE51BC02AB1998600C4B6C5 /* MainViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +79,8 @@
 		BD98BF7D2ABD1B7400D3B0F8 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		BDA2D07E2AA074B400D20C00 /* Todo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Todo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BDA2D07F2AA074B400D20C00 /* Todo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Todo+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		BDDF36F82A85C4E600668ACF /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		BDCCE4C02ABD7B6500DDE956 /* TodoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoManager.swift; sourceTree = "<group>"; };
+		BDDF36F82A85C4E600668ACF /* ErrorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorManager.swift; sourceTree = "<group>"; };
 		BDE51BC02AB1998600C4B6C5 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -163,6 +165,7 @@
 				BD8E82182A7A3B7E00474438 /* AppDelegate.swift */,
 				BD8E821A2A7A3B7E00474438 /* SceneDelegate.swift */,
 				BD98BF7F2ABD1DCA00D3B0F8 /* User MVVM */,
+				BDCCE4BF2ABD7B5400DDE956 /* Manager */,
 				BDB1B4532A81E156003AA986 /* Model */,
 				BD52064A2A82682800EAF470 /* Views */,
 				BDE0F5232AA1A2890032FA8C /* Controller */,
@@ -190,19 +193,27 @@
 			children = (
 				BDA2D07E2AA074B400D20C00 /* Todo+CoreDataClass.swift */,
 				BDA2D07F2AA074B400D20C00 /* Todo+CoreDataProperties.swift */,
-				BDDF36F82A85C4E600668ACF /* Errors.swift */,
 				BD0C27E82A9A3D34005245A2 /* Categories.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		BDCCE4BF2ABD7B5400DDE956 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				BDCCE4C02ABD7B6500DDE956 /* TodoManager.swift */,
+				BDDF36F82A85C4E600668ACF /* ErrorManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		BDE0F5232AA1A2890032FA8C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
 				BDE51BC02AB1998600C4B6C5 /* MainViewController.swift */,
-				BD93716A2AB342F300DFD96B /* ProfileDesignViewController.swift */,
 				BD8E821C2A7A3B7E00474438 /* TodoViewController.swift */,
 				BD8E822E2A7A408A00474438 /* FinishedController.swift */,
+				BD93716A2AB342F300DFD96B /* ProfileDesignViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -295,6 +306,7 @@
 				BD93716F2AB46F5F00DFD96B /* ThumbnailCell.swift in Sources */,
 				BD8E82192A7A3B7E00474438 /* AppDelegate.swift in Sources */,
 				BDA2D0812AA074B400D20C00 /* Todo+CoreDataProperties.swift in Sources */,
+				BDCCE4C12ABD7B6500DDE956 /* TodoManager.swift in Sources */,
 				BD14B08F2A9F31920056BD27 /* SectionViewCell.swift in Sources */,
 				BDE51BC12AB1998600C4B6C5 /* MainViewController.swift in Sources */,
 				BD619C4C2A83204A00BF4EF8 /* FinishedCell.swift in Sources */,
@@ -306,7 +318,7 @@
 				BDA2D0802AA074B400D20C00 /* Todo+CoreDataClass.swift in Sources */,
 				BD52064D2A82684200EAF470 /* TodoViewCell.swift in Sources */,
 				BD0C27EE2A9B7DA5005245A2 /* DataModel.xcdatamodeld in Sources */,
-				BDDF36F92A85C4E600668ACF /* Errors.swift in Sources */,
+				BDDF36F92A85C4E600668ACF /* ErrorManager.swift in Sources */,
 				BD5206502A827A7F00EAF470 /* Extension.swift in Sources */,
 				BD93716B2AB342F300DFD96B /* ProfileDesignViewController.swift in Sources */,
 			);

@@ -13,6 +13,7 @@ class ProfileDesignViewController: UIViewController {
     let customTabBar = UITabBar()
     var isFollowButtonTapped = false
     var isMessageButtonTapped = false
+    let imageAsset: [String] = (1...7).map({"picture-\($0)"})
     
     //MARK: - UIComponent 선언
     lazy var rightItem: UIBarButtonItem = {
@@ -404,13 +405,13 @@ extension ProfileDesignViewController: UICollectionViewDelegate {
     //MARK: - UICollectionViewDataSource
 extension ProfileDesignViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 21
+        return imageAsset.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThumbnailCell.identifier, for: indexPath) as! ThumbnailCell
 /// 지금은 이미지를 돌고 있지만 cell에 들어가는 이미지는 1로 고정 -> the images are being rotated, yet the indexPath of the cells, the columns for individual cells aren't being changed. thus a single cell is being populated with the exact image.
-        let imageName = "picture-\(indexPath.item + 1)"
+        let imageName = imageAsset[indexPath.item]
         cell.setImage(image: imageName)
         return cell
     }

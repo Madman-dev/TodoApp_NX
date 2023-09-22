@@ -13,9 +13,11 @@ class MainViewController: UIViewController {
     var checkTodoButton: UIButton = {
         let button = UIButton()
         button.setTitle("할일 확인하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.tintColor = .systemBlue
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 200).isActive = true
         button.addTarget(self, action: #selector(todoButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -23,8 +25,11 @@ class MainViewController: UIViewController {
     var checkCompletedTodo: UIButton = {
         let button = UIButton()
         button.setTitle("완료한 일 확인하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 200).isActive = true
         button.addTarget(self, action: #selector(completedTodoTapped), for: .touchUpInside)
         return button
     }()
@@ -32,8 +37,11 @@ class MainViewController: UIViewController {
     var profileButton: UIButton = {
         let button = UIButton()
         button.setTitle("프로필 페이지 확인하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 200).isActive = true
         button.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -41,9 +49,12 @@ class MainViewController: UIViewController {
     var userCheckButton: UIButton = {
         let button = UIButton()
         button.setTitle("유저 정보", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(userCheckButtonTapped), for: .touchUpInside)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 10
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        button.addTarget(self, action: #selector(userCheckButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -52,7 +63,6 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemPink
         setUI()
-        getFontName()
     }
     
     //MARK: - 메서드 선언
@@ -76,39 +86,24 @@ class MainViewController: UIViewController {
     
     @objc func todoButtonTapped() {
         print("투두 버튼이 눌렸습니다.")
-        let viewControllerClassToCheck = TodoViewController.self
         
-        if let existingVC = navigationController?.viewControllers.first(where: {$0.isKind(of: viewControllerClassToCheck)}) {
-            navigationController?.pushViewController(existingVC, animated: true)
-        } else {
-            let newVC = viewControllerClassToCheck.init()
-            navigationController?.pushViewController(newVC, animated: true)
-        }
+        let newVC = TodoViewController()
+        navigationController?.pushViewController(newVC, animated: true)
     }
-
+    
     @objc func completedTodoTapped() {
         print("완료 버튼이 눌렸습니다.")
-        let viewControllerToCheck = FinishedController.self
         
-        if let existingVC = navigationController?.viewControllers.first(where: {$0.isKind(of: viewControllerToCheck)}) {
-            navigationController?.pushViewController(existingVC, animated: true)
-        } else {
-            let newVC = viewControllerToCheck.init()
-            navigationController?.pushViewController(newVC, animated: true)
-        }
+        let newVC = FinishedController()
+        navigationController?.pushViewController(newVC, animated: true)
     }
     
     @objc func profileButtonTapped() {
         print("프로필 페이지 눌렸습니다.")
-        let viewControllerToCheck = ProfileDesignViewController.self
         
-        if let existingVC = navigationController?.viewControllers.first(where: {$0.isKind(of: viewControllerToCheck)}) {
-            navigationController?.pushViewController(existingVC, animated: true)
-        } else {
-            let newVC = viewControllerToCheck.init()
-            newVC.modalPresentationStyle = .fullScreen
-            present(newVC, animated: true)
-        }
+        let newVC = ProfileDesignViewController()
+        newVC.modalPresentationStyle = .fullScreen
+        present(newVC, animated: true)
     }
     
     @objc func userCheckButtonTapped() {
