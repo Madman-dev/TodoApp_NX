@@ -9,6 +9,8 @@ import UIKit
 
 class ProfileDesignViewController: UIViewController {
     let customTabBar = UITabBar()
+    var isFollowButtonTapped = false
+    var isMessageButtonTapped = false
     
     lazy var rightItem: UIBarButtonItem = {
         let image = UIImage(named: "Menu")?.withTintColor(.black, renderingMode: .alwaysOriginal)
@@ -18,11 +20,11 @@ class ProfileDesignViewController: UIViewController {
     
     var profileImage: UIImageView = {
         let iv = UIImageView()
-        let image = UIImage(named: "UserPic")//?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        let image = UIImage(named: "UserPic")
         iv.image = image
         iv.clipsToBounds = true
         iv.layer.borderWidth = 1
-        iv.layer.borderColor = UIColor.gray.cgColor
+        iv.layer.borderColor = UIColor.white.cgColor
         iv.contentMode = .scaleToFill
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
@@ -31,14 +33,14 @@ class ProfileDesignViewController: UIViewController {
     var postNumber: UILabel = {
         let label = UILabel()
         label.text = "0"
-        label.font = UIFont(name: "OpenSans", size: 16.5)
+        label.font = UIFont(name: "OpenSans-Bold", size: 16.5)
         return label
     }()
     
     var postLabel: UILabel = {
         let label = UILabel()
         label.text = "post"
-        label.font = UIFont(name: "OpenSans", size: 14)
+        label.font = UIFont(name: "OpenSans-Light", size: 14)
         return label
     }()
     
@@ -54,14 +56,14 @@ class ProfileDesignViewController: UIViewController {
     var followerNumber: UILabel = {
         let label = UILabel()
         label.text = "0"
-        label.font = UIFont(name: "Open Sans", size: 16.5)
+        label.font = UIFont(name: "OpenSans-Bold", size: 16.5)
         return label
     }()
     
     var followerLabel: UILabel = {
         let label = UILabel()
         label.text = "follower"
-        label.font = UIFont.systemFont(ofSize: 15, weight: .light)
+        label.font = UIFont(name: "OpenSans-Light", size: 14)
         return label
     }()
     
@@ -77,14 +79,14 @@ class ProfileDesignViewController: UIViewController {
     var followingNumber: UILabel = {
         let label = UILabel()
         label.text = "0"
-        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        label.font = UIFont(name: "OpenSans-Bold", size: 16.5)
         return label
     }()
     
     var followingLabel: UILabel = {
         let label = UILabel()
         label.text = "following"
-        label.font = UIFont.systemFont(ofSize: 15, weight: .light)
+        label.font = UIFont(name: "OpenSans-Light", size: 14)
         return label
     }()
     
@@ -110,7 +112,7 @@ class ProfileDesignViewController: UIViewController {
     var profileName: UILabel = {
         let label = UILabel()
         label.text = "르탄이"
-        label.font = UIFont.systemFont(ofSize: 15, weight: .bold)
+        label.font = UIFont(name: "OpenSans-Bold", size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -118,13 +120,16 @@ class ProfileDesignViewController: UIViewController {
     var profileDescription: UILabel = {
         let label = UILabel()
         label.text = "iOS Developer 🐥"
+        label.font = UIFont(name: "OpenSans-Light", size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     var profileUrl: UILabel = {
         let label = UILabel()
-        label.text = "https://github.com/Madman-dev"
+        label.text = "나의 깃헙 링크"
+        label.textColor = UIColor(hexCode: "#3898F3")
+        label.font = UIFont(name: "OpenSans-Light", size: 14)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -142,10 +147,11 @@ class ProfileDesignViewController: UIViewController {
     var followButton: UIButton = {
         let button = UIButton()
         button.setTitle("Follow", for: .normal)
-        button.backgroundColor = .blue
-        button.layer.borderWidth = 2
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.cornerRadius = 10
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
@@ -155,12 +161,14 @@ class ProfileDesignViewController: UIViewController {
     var messageButton: UIButton = {
         let button = UIButton()
         button.setTitle("Message", for: .normal)
-        button.backgroundColor = .white
-        button.layer.borderWidth = 2
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.cornerRadius = 10
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -168,15 +176,12 @@ class ProfileDesignViewController: UIViewController {
         let button = UIButton()
         let image = UIImage(systemName: "chevron.down")
         button.setImage(image, for: .normal)
-        button.frame.size = CGSize(width: 30, height: 30)
-//        button.heightAnchor.constraint(equalToConstant: 30).isActive = true
-//        button.widthAnchor.constraint(equalToConstant: 30).isActive = true
         button.widthAnchor.constraint(equalToConstant: 30).isActive = true
         button.heightAnchor.constraint(equalToConstant: 30).isActive = true
         button.backgroundColor = .white
-        button.layer.borderWidth = 2
+        button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.gray.cgColor
-        button.layer.cornerRadius = 10
+        button.layer.cornerRadius = 5
         button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -228,7 +233,7 @@ class ProfileDesignViewController: UIViewController {
     
     lazy var photoCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
-        collectionView.backgroundColor = .green
+        collectionView.backgroundColor = .systemBackground
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isScrollEnabled = true
@@ -288,8 +293,8 @@ class ProfileDesignViewController: UIViewController {
     func setTabBar() {
         view.addSubview(customTabBar)
         
-        let image = UIImage(systemName: "house")
-        let mainBarItem = UITabBarItem(title: "메인 화면", image: image, tag: 0)
+        let image = UIImage(systemName: "person.fill")?.withTintColor(.black, renderingMode: .alwaysOriginal)
+        let mainBarItem = UITabBarItem(title: nil, image: image, tag: 0)
         
         customTabBar.setItems([mainBarItem], animated: false)
         customTabBar.translatesAutoresizingMaskIntoConstraints = false
@@ -300,11 +305,19 @@ class ProfileDesignViewController: UIViewController {
             customTabBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             customTabBar.heightAnchor.constraint(equalToConstant: 84)
         ])
+        
         customTabBar.delegate = self
     }
     
     func handleTapBarItemTapped() {
-        navigationController?.popToRootViewController(animated: true)
+        self.dismiss(animated: true)
+    }
+    
+    func profileTapGesture() {
+        let profileUrlTapGesture = UITapGestureRecognizer(target: self, action: #selector(labelTapped))
+        
+        profileUrl.isUserInteractionEnabled = true
+        profileUrl.addGestureRecognizer(profileUrlTapGesture)
     }
  
     @objc func sideBarTapped() {
@@ -312,11 +325,47 @@ class ProfileDesignViewController: UIViewController {
     }
     
     @objc func followButtonTapped() {
-        print("팔로우 버튼이 눌렸습니다.")
+        
+        if isFollowButtonTapped {
+            followButton.backgroundColor = UIColor.white
+            followButton.setTitleColor(.black, for: .normal)
+            isFollowButtonTapped = false
+            print("팔로우 버튼이 해제 됐습니다.")
+        } else {
+            followButton.backgroundColor = UIColor(hexCode: "#3898F3")
+            followButton.setTitleColor(.white, for: .normal)
+            isFollowButtonTapped = true
+            print("팔로우 버튼이 눌렸습니다.")
+        }
+    }
+    
+    @objc func messageButtonTapped() {
+        if isMessageButtonTapped {
+            messageButton.backgroundColor = UIColor.white
+            messageButton.setTitleColor(.black, for: .normal)
+            isMessageButtonTapped = false
+            print("메시지 버튼이 해제 됐습니다.")
+        } else {
+            messageButton.backgroundColor = UIColor(hexCode: "#3898F3")
+            messageButton.setTitleColor(.white, for: .normal)
+            isMessageButtonTapped = true
+            print("메시지 버튼이 눌렸습니다.")
+        }
     }
     
     @objc func gridButtonTapped() {
         print("그리드 버튼이 눌렸습니다.")
+    }
+    
+    @objc func labelTapped(_ sender: UILabel) {
+        print("라벨이 눌렸습니다.")
+        if let url = URL(string: "https://github.com/Madman-dev") {
+            UIApplication.shared.open(url)
+        }
+    }
+    
+    func incrementFollowerCount() {
+        
     }
     
     deinit {
@@ -338,6 +387,7 @@ extension ProfileDesignViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        profileTapGesture()
     }
     
     override func viewDidLayoutSubviews() {
@@ -349,7 +399,6 @@ extension ProfileDesignViewController {
 }
 
 extension ProfileDesignViewController: UICollectionViewDelegate {
- 
 }
 
 extension ProfileDesignViewController: UICollectionViewDataSource {

@@ -210,7 +210,7 @@ class TodoViewController: UIViewController {
         
         let newTodo = Todo(context: self.context)
         newTodo.title = text
-        newTodo.id = 0
+//        newTodo.id = 
         newTodo.isCompleted = true
         newTodo.section = "daily"
         
@@ -282,7 +282,6 @@ extension TodoViewController: UITableViewDataSource {
     // 카테고리 구분
     func numberOfSections(in tableView: UITableView) -> Int {
         return Categories.allCases.count
-//        return todosByCategory[selectedCategory!]?.count ?? 0
     }
     
     // 각 section별로 채워질 데이터 수
