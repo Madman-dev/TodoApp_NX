@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BD0C27E92A9A3D34005245A2 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0C27E82A9A3D34005245A2 /* Categories.swift */; };
-		BD0C27EE2A9B7DA5005245A2 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BD0C27EC2A9B7DA5005245A2 /* DataModel.xcdatamodeld */; };
+		BD0C27EE2A9B7DA5005245A2 /* Todo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BD0C27EC2A9B7DA5005245A2 /* Todo.xcdatamodeld */; };
 		BD14B08F2A9F31920056BD27 /* SectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD14B08E2A9F31920056BD27 /* SectionViewCell.swift */; };
 		BD52064D2A82684200EAF470 /* TodoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD52064C2A82684200EAF470 /* TodoViewCell.swift */; };
 		BD5206502A827A7F00EAF470 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD52064F2A827A7F00EAF470 /* Extension.swift */; };
@@ -144,7 +144,7 @@
 		BD8E820C2A7A3B7E00474438 = {
 			isa = PBXGroup;
 			children = (
-				BD0C27EC2A9B7DA5005245A2 /* DataModel.xcdatamodeld */,
+				BD0C27EC2A9B7DA5005245A2 /* Todo.xcdatamodeld */,
 				BD8E82172A7A3B7E00474438 /* TodoApp */,
 				BD8E82162A7A3B7E00474438 /* Products */,
 			);
@@ -317,7 +317,7 @@
 				BD0C27E92A9A3D34005245A2 /* Categories.swift in Sources */,
 				BDA2D0802AA074B400D20C00 /* Todo+CoreDataClass.swift in Sources */,
 				BD52064D2A82684200EAF470 /* TodoViewCell.swift in Sources */,
-				BD0C27EE2A9B7DA5005245A2 /* DataModel.xcdatamodeld in Sources */,
+				BD0C27EE2A9B7DA5005245A2 /* Todo.xcdatamodeld in Sources */,
 				BDDF36F92A85C4E600668ACF /* ErrorManager.swift in Sources */,
 				BD5206502A827A7F00EAF470 /* Extension.swift in Sources */,
 				BD93716B2AB342F300DFD96B /* ProfileDesignViewController.swift in Sources */,
@@ -544,13 +544,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		BD0C27EC2A9B7DA5005245A2 /* DataModel.xcdatamodeld */ = {
+		BD0C27EC2A9B7DA5005245A2 /* Todo.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				BD0C27ED2A9B7DA5005245A2 /* DataModel.xcdatamodel */,
 			);
 			currentVersion = BD0C27ED2A9B7DA5005245A2 /* DataModel.xcdatamodel */;
-			path = DataModel.xcdatamodeld;
+			path = Todo.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

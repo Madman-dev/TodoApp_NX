@@ -33,14 +33,14 @@ class TodoManager {
     }
     
     // 투두 데이터 저장
-    func saveTodo(title: String, isCompleted: Bool = false, section: String, onSuccess: ((Bool) -> Void)? = nil) {
+    func saveTodo(title: String, isCompleted: Bool = false, section: Categories, onSuccess: ((Bool) -> Void)? = nil) {
         if let context = context,
            let entity: NSEntityDescription = NSEntityDescription.entity(forEntityName: containerName, in: context) {
             if let todoData: Todo = NSManagedObject(entity: entity, insertInto: context) as? Todo {
                 todoData.id = UUID()
                 todoData.title = title
                 todoData.isCompleted = isCompleted
-                todoData.section = section
+                todoData.section = section.rawValue
                 contextSave { success in
                     onSuccess?(success)
                 }

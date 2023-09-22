@@ -12,6 +12,7 @@ enum AppError: Error {
     case tooMuchTodos
     case unknownError
     case noData
+    case couldNotSave
 }
 
 class ErrorManager {
@@ -28,6 +29,8 @@ class ErrorManager {
             alert = UIAlertController(title: "10개 이상은 집중하기 힘들지 않을까요?", message: "맨 위 목표 먼저 마무리해 주세요", preferredStyle: .alert)
         case .noData:
             alert = UIAlertController(title: "데이터가 없음", message: "데이터를 불러올 수 없었어요", preferredStyle: .alert)
+        case .couldNotSave:
+            alert = UIAlertController(title: "데이터 저장 오류.", message: "데이터를 저장할 수 없었습니다.", preferredStyle: .alert)
         default:
             alert = UIAlertController(title: "알 수 없는 오류", message: "알 수 없는 오류가 발생했어요!", preferredStyle: .alert)
         }

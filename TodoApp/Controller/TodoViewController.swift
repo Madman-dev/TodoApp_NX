@@ -93,7 +93,7 @@ class TodoViewController: UIViewController {
         return view
     }()
     
-    //MARK: - 키보드 NotificationCenter
+    //MARK: - 메서드 선언: 키보드 NotificationCenter
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
@@ -124,10 +124,71 @@ class TodoViewController: UIViewController {
         }
         animator.startAnimation()
     }
-
     
-    //MARK: - 메서드 선언
+    @objc func keyboardWillShow(_ notification: NSNotification) {
+        if messageTextField.isEditing {
+            updateViewWithKeyboard(notification: notification, viewBottomConstraint: self.textFieldBottomConstraint!, keyboardWillShow: true)
+        }
+    }
     
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        updateViewWithKeyboard(notification: notification, viewBottomConstraint: self.textFieldBottomConstraint!, keyboardWillShow: false)
+    }
+    
+    //MARK: - setup 메서드
+    func setView() {
+        setupTableView()
+        setupBottomView()
+        setupCategory()
+        setupSendButton()
+    }
+    
+    func setupTableView() {
+        todoTableView.dataSource = self
+        todoTableView.delegate = self
+        
+        view.addSubview(todoTableView)
+        todoTableView.frame = view.bounds
+    }
+    
+    func setupBottomView() {
+        let stack = UIStackView(arrangedSubviews: [checkFinishedButton, messageTextField])
+        stack.axis = .horizontal
+        stack.spacing = 5
+        stack.distribution = .fillProportionally
+        
+        view.addSubview(tapBarView)
+        tapBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tapBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tapBarView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        tapBarView.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.centerXAnchor.constraint(equalTo: tapBarView.centerXAnchor, constant: 0).isActive = true
+        stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
+        stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
+        tapBarView.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: 30).isActive = true
+    }
+    
+    func setupCategory() {
+        view.addSubview(categoryCollection)
+        categoryCollection.bottomAnchor.constraint(equalTo: tapBarView.topAnchor, constant: 0).isActive = true
+        categoryCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        categoryCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        categoryCollection.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        textFieldBottomConstraint = tapBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        textFieldBottomConstraint?.isActive = true
+    }
+    
+    func setupSendButton() {
+        tapBarView.addSubview(sendButton)
+        sendButton.trailingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: -10).isActive = true
+        sendButton.topAnchor.constraint(equalTo: messageTextField.topAnchor).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: messageTextField.bottomAnchor).isActive = true
+        sendButton.isHidden = true
+    }
+    
+    //MARK: - 투두 연관 메서드
     @objc func checkFinishedTapped(_ sender: UIButton) {
         sender.animateButton(sender)
         
@@ -148,13 +209,14 @@ class TodoViewController: UIViewController {
             ErrorManager.shared.displayErrors(.tooMuchTodos, inViewController: self)
             return
         }
-        
-        TodoManager.shared.saveTodo(title: text, section: "daily") { success in
+
+        TodoManager.shared.saveTodo(title: text, section: .daily) { success in
             if success {
                 let updatedData = TodoManager.shared.fetchData()
                 self.updateTableView(with: updatedData)
+                print("투두가 저장되었습니다.")
             } else {
-                print("투두를 저장할 수 없었습니다.")
+                ErrorManager.shared.displayErrors(.couldNotSave, inViewController: self)
             }
         }
     }
@@ -166,16 +228,6 @@ class TodoViewController: UIViewController {
         }
     }
     
-    @objc func keyboardWillShow(_ notification: NSNotification) {
-        if messageTextField.isEditing {
-            updateViewWithKeyboard(notification: notification, viewBottomConstraint: self.textFieldBottomConstraint!, keyboardWillShow: true)
-        }
-    }
-    
-    @objc func keyboardWillHide(_ notification: NSNotification) {
-        updateViewWithKeyboard(notification: notification, viewBottomConstraint: self.textFieldBottomConstraint!, keyboardWillShow: false)
-    }
-    
     deinit {
         print("TodoViewController이 화면에서 사라졌습니다.")
     }
@@ -185,45 +237,9 @@ class TodoViewController: UIViewController {
 extension TodoViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        setView()
         view.backgroundColor = .white
-                
-        todoTableView.dataSource = self
-        todoTableView.delegate = self
-
-        view.addSubview(todoTableView)
-        todoTableView.frame = view.bounds
         
-        let stack = UIStackView(arrangedSubviews: [checkFinishedButton, messageTextField])
-        stack.axis = .horizontal
-        stack.spacing = 5
-        stack.distribution = .fillProportionally
-        
-        view.addSubview(tapBarView)
-        tapBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tapBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tapBarView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        tapBarView.addSubview(stack)
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.centerXAnchor.constraint(equalTo: tapBarView.centerXAnchor, constant: 0).isActive = true
-        stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
-        stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
-        tapBarView.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: 30).isActive = true
-        
-        tapBarView.addSubview(sendButton)
-        sendButton.trailingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: -10).isActive = true
-        sendButton.topAnchor.constraint(equalTo: messageTextField.topAnchor).isActive = true
-        sendButton.bottomAnchor.constraint(equalTo: messageTextField.bottomAnchor).isActive = true
-        sendButton.isHidden = true
-        
-        view.addSubview(categoryCollection)
-        categoryCollection.bottomAnchor.constraint(equalTo: tapBarView.topAnchor, constant: 0).isActive = true
-        categoryCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        categoryCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        categoryCollection.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        textFieldBottomConstraint = tapBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-        textFieldBottomConstraint?.isActive = true
-
         let fetchedData = TodoManager.shared.fetchData()
         updateTableView(with: fetchedData)
     }

@@ -11,7 +11,6 @@ import CoreData
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
