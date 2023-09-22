@@ -93,7 +93,7 @@ class TodoViewController: UIViewController {
         return view
     }()
     
-    //MARK: - 키보드 NotificationCenter
+    //MARK: - 메서드 선언: 키보드 NotificationCenter
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
@@ -124,95 +124,6 @@ class TodoViewController: UIViewController {
         }
         animator.startAnimation()
     }
-
-    //MARK: - 에러 대처
-    private func displayErrors(error: Errors) {
-        let alert: UIAlertController
-        
-        switch error {
-        case .blankTextField:
-            alert = UIAlertController(title: "내용이 비어있어요!", message: "투두 작성을 잊으신거 아니실까요?", preferredStyle: .alert)
-        case .tooMuchTodos:
-            alert = UIAlertController(title: "10개 이상은 집중하기 힘들지 않을까요?", message: "맨 위 목표 먼저 마무리해 주세요", preferredStyle: .alert)
-        case .noData:
-            alert = UIAlertController(title: "데이터가 없음", message: "데이터를 불러올 수 없었어요", preferredStyle: .alert)
-        default:
-            alert = UIAlertController(title: "알 수 없는 오류", message: "알 수 없는 오류가 발생했어요!", preferredStyle: .alert)
-        }
-        
-        let dismissAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-        alert.addAction(dismissAction)
-        present(alert, animated: true)
-    }
-    
-    //MARK: - 메서드 선언
-    // CoreData에 있는 값을 호출하는 방법
-    func fetchData() {
-        do {
-            self.todos = try context.fetch(Todo.fetchRequest())
-            DispatchQueue.main.async {
-                self.todoTableView.reloadData()
-            }
-        }
-        catch {
-            print("데이터 부재 발생: \(error.localizedDescription)")
-            displayErrors(error: .noData)
-        }
-    }
-    
-    private func addTodo() throws {
-        guard let text = messageTextField.text, !text.isEmpty else { throw Errors.blankTextField }
-        guard todos!.count < 10 else { throw Errors.tooMuchTodos }
-        
-        let newTodo = Todo(context: self.context)
-        newTodo.title = text
-        newTodo.isCompleted = true
-        newTodo.section = "daily"
-        
-        do {
-            try self.context.save()
-            self.fetchData()
-        } catch {
-            if let customError = error as? Errors {
-                print("default 에러 발생: \(customError.localizedDescription)")
-                displayErrors(error: customError)
-            } else {
-                print("데이터 부재 발생: \(error.localizedDescription)")
-                displayErrors(error: .noData)
-            }
-        }
-    }
-    
-    @objc func checkFinishedTapped(_ sender: UIButton) {
-        sender.animateButton(sender)
-        
-        if let navigationController = self.navigationController {
-            let destination = FinishedController()
-            navigationController.pushViewController(destination, animated: true)
-        }
-    }
-    
-    @objc func addTodoTapped(_ sender: UIButton) {
-        sender.animateButton(sender)
-        do {
-            try addTodo()
-        } catch Errors.blankTextField {
-            print("빈 에러 발생")
-            displayErrors(error: .blankTextField)
-        } catch Errors.tooMuchTodos {
-            print("너무 많은 투두.")
-            displayErrors(error: .tooMuchTodos)
-        } catch {
-            print("에러가 발생했습니다. \(error.localizedDescription)")
-        }
-    }
-    
-    @objc func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField == messageTextField {
-            sendButton.isHidden = false
-            textField.placeholder = nil
-        }
-    }
     
     @objc func keyboardWillShow(_ notification: NSNotification) {
         if messageTextField.isEditing {
@@ -224,23 +135,23 @@ class TodoViewController: UIViewController {
         updateViewWithKeyboard(notification: notification, viewBottomConstraint: self.textFieldBottomConstraint!, keyboardWillShow: false)
     }
     
-    deinit {
-        print("TodoViewController이 화면에서 사라졌습니다.")
+    //MARK: - setup 메서드
+    func setView() {
+        setupTableView()
+        setupBottomView()
+        setupCategory()
+        setupSendButton()
     }
-}
-
-    //MARK: - ViewLoad 시점
-extension TodoViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-                
+    
+    func setupTableView() {
         todoTableView.dataSource = self
         todoTableView.delegate = self
-
+        
         view.addSubview(todoTableView)
         todoTableView.frame = view.bounds
-        
+    }
+    
+    func setupBottomView() {
         let stack = UIStackView(arrangedSubviews: [checkFinishedButton, messageTextField])
         stack.axis = .horizontal
         stack.spacing = 5
@@ -257,13 +168,9 @@ extension TodoViewController {
         stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
         stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
         tapBarView.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: 30).isActive = true
-        
-        tapBarView.addSubview(sendButton)
-        sendButton.trailingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: -10).isActive = true
-        sendButton.topAnchor.constraint(equalTo: messageTextField.topAnchor).isActive = true
-        sendButton.bottomAnchor.constraint(equalTo: messageTextField.bottomAnchor).isActive = true
-        sendButton.isHidden = true
-        
+    }
+    
+    func setupCategory() {
         view.addSubview(categoryCollection)
         categoryCollection.bottomAnchor.constraint(equalTo: tapBarView.topAnchor, constant: 0).isActive = true
         categoryCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -271,26 +178,88 @@ extension TodoViewController {
         categoryCollection.heightAnchor.constraint(equalToConstant: 50).isActive = true
         textFieldBottomConstraint = tapBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
         textFieldBottomConstraint?.isActive = true
+    }
+    
+    func setupSendButton() {
+        tapBarView.addSubview(sendButton)
+        sendButton.trailingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: -10).isActive = true
+        sendButton.topAnchor.constraint(equalTo: messageTextField.topAnchor).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: messageTextField.bottomAnchor).isActive = true
+        sendButton.isHidden = true
+    }
+    
+    //MARK: - 투두 연관 메서드
+    @objc func checkFinishedTapped(_ sender: UIButton) {
+        sender.animateButton(sender)
+        
+        if let navigationController = self.navigationController {
+            let destination = FinishedController()
+            navigationController.pushViewController(destination, animated: true)
+        }
+    }
+    
+    @objc func addTodoTapped(_ sender: UIButton) {
+        sender.animateButton(sender)
+        
+        guard let text = messageTextField.text, !text.isEmpty else {
+            ErrorManager.shared.displayErrors(.blankTextField, inViewController: self)
+            return
+        }
+        guard todos!.count < 10 else {
+            ErrorManager.shared.displayErrors(.tooMuchTodos, inViewController: self)
+            return
+        }
 
-        fetchData()
+        TodoManager.shared.saveTodo(title: text, section: .daily) { success in
+            if success {
+                let updatedData = TodoManager.shared.fetchData()
+                self.updateTableView(with: updatedData)
+                print("투두가 저장되었습니다.")
+            } else {
+                ErrorManager.shared.displayErrors(.couldNotSave, inViewController: self)
+            }
+        }
+    }
+    
+    @objc func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == messageTextField {
+            sendButton.isHidden = false
+            textField.placeholder = nil
+        }
+    }
+    
+    deinit {
+        print("TodoViewController이 화면에서 사라졌습니다.")
+    }
+}
+
+    //MARK: - ViewLoad 시점
+extension TodoViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setView()
+        view.backgroundColor = .white
+        
+        let fetchedData = TodoManager.shared.fetchData()
+        updateTableView(with: fetchedData)
     }
 }
 
     //MARK: - UITableViewDelegate
 extension TodoViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "삭제하기") { (action, view, completionHandler) in
-            let remove = self.todos?[indexPath.row]
-            if let remove = remove {
+            if let remove = self.todos?[indexPath.row] {
                 self.context.delete(remove)
+                self.todos?.remove(at: indexPath.row)
+                
+                self.todoTableView.deleteRows(at: [indexPath], with: .automatic)
+                
+                do {
+                    try self.context.save()
+                } catch {
+                }
             }
-            do {
-                try self.context.save()
-            }
-            catch {
-            }
-            self.fetchData()
         }
         return UISwipeActionsConfiguration(actions: [delete])
     }
@@ -336,7 +305,8 @@ extension TodoViewController: UITableViewDataSource {
             }
             catch {
             }
-            self.fetchData()
+            let fetchedData = TodoManager.shared.fetchData()
+            self.updateTableView(with: fetchedData)
         }
         alert.addAction(saveButton)
         present(alert, animated: true)
@@ -345,6 +315,11 @@ extension TodoViewController: UITableViewDataSource {
     // 카테고리 구분 타이틀
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return Categories.allCases[section].rawValue
+    }
+    
+    func updateTableView(with data: [Todo]) {
+        self.todos = data
+        self.todoTableView.reloadData()
     }
 }
 
