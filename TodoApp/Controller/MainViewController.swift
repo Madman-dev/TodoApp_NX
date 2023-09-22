@@ -8,6 +8,8 @@
 import UIKit
 
 class MainViewController: UIViewController {
+    
+    //MARK: - UIComponent 선언
     var checkTodoButton: UIButton = {
         let button = UIButton()
         button.setTitle("할일 확인하기", for: .normal)
@@ -44,14 +46,16 @@ class MainViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
+    
+    //MARK: - ViewLoad 시점
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+        view.backgroundColor = .systemPink
         setUI()
         getFontName()
     }
     
+    //MARK: - 메서드 선언
     private func setUI() {
         [checkTodoButton, checkCompletedTodo, profileButton, userCheckButton].forEach{view.addSubview($0)}
         setButton()
@@ -96,7 +100,6 @@ class MainViewController: UIViewController {
     
     @objc func profileButtonTapped() {
         print("프로필 페이지 눌렸습니다.")
-        
         let viewControllerToCheck = ProfileDesignViewController.self
         
         if let existingVC = navigationController?.viewControllers.first(where: {$0.isKind(of: viewControllerToCheck)}) {

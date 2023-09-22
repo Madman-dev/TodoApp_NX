@@ -8,10 +8,13 @@
 import UIKit
 
 class ProfileDesignViewController: UIViewController {
+    
+    //MARK: - 전역 변수 선언
     let customTabBar = UITabBar()
     var isFollowButtonTapped = false
     var isMessageButtonTapped = false
     
+    //MARK: - UIComponent 선언
     lazy var rightItem: UIBarButtonItem = {
         let image = UIImage(named: "Menu")?.withTintColor(.black, renderingMode: .alwaysOriginal)
         let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(sideBarTapped))
@@ -243,6 +246,7 @@ class ProfileDesignViewController: UIViewController {
         return collectionView
     }()
     
+    //MARK: - 메서드 선언
     func setup() {
         setProfileLayer()
         setButtonLayer()
@@ -364,17 +368,12 @@ class ProfileDesignViewController: UIViewController {
         }
     }
     
-    func incrementFollowerCount() {
-        
-    }
-    
     deinit {
         print("ProfileDesignViewController이 화면에서 사라졌습니다.")
     }
 }
 
-//MARK: - ViewLoad 시점
-
+    //MARK: - ViewLoad 시점
 extension ProfileDesignViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -398,9 +397,11 @@ extension ProfileDesignViewController {
     }
 }
 
+    //MARK: - UICollectionViewDelegate
 extension ProfileDesignViewController: UICollectionViewDelegate {
 }
 
+    //MARK: - UICollectionViewDataSource
 extension ProfileDesignViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 21
@@ -415,7 +416,7 @@ extension ProfileDesignViewController: UICollectionViewDataSource {
     }
 }
 
-//MARK: - UICollectionViewDelegateFlowLayout
+    //MARK: - UICollectionViewDelegateFlowLayout
 extension ProfileDesignViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width: CGFloat = (collectionView.frame.width - 4) / 3
@@ -431,6 +432,7 @@ extension ProfileDesignViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+    //MARK: - UITabBarDelegate
 extension ProfileDesignViewController: UITabBarDelegate {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         if item.tag == 0 {

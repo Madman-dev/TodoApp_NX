@@ -10,13 +10,14 @@ import CoreData
 
 class TodoViewController: UIViewController {
     
-    //MARK: - Outlet 및 전역 변수 정리
+    //MARK: - 전역 변수 선언
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var todos: [Todo]?
     var textFieldBottomConstraint: NSLayoutConstraint?
     var selectedCategory: Categories?
     var todosByCategory: [Categories: [Todo]] = [:]
-
+    
+    //MARK: - UIComponent 선언
     let todoTableView = {
         let tableView = UITableView(frame: UIScreen.main.bounds, style: .insetGrouped)
         tableView.register(TodoViewCell.self, forCellReuseIdentifier: "cell")
@@ -92,51 +93,6 @@ class TodoViewController: UIViewController {
         return view
     }()
     
-    //MARK: - 실행
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-                
-        todoTableView.dataSource = self
-        todoTableView.delegate = self
-
-        view.addSubview(todoTableView)
-        todoTableView.frame = view.bounds
-        
-        let stack = UIStackView(arrangedSubviews: [checkFinishedButton, messageTextField])
-        stack.axis = .horizontal
-        stack.spacing = 5
-        stack.distribution = .fillProportionally
-        
-        view.addSubview(tapBarView)
-        tapBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tapBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tapBarView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        
-        tapBarView.addSubview(stack)
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.centerXAnchor.constraint(equalTo: tapBarView.centerXAnchor, constant: 0).isActive = true
-        stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
-        stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
-        tapBarView.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: 30).isActive = true
-        
-        tapBarView.addSubview(sendButton)
-        sendButton.trailingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: -10).isActive = true
-        sendButton.topAnchor.constraint(equalTo: messageTextField.topAnchor).isActive = true
-        sendButton.bottomAnchor.constraint(equalTo: messageTextField.bottomAnchor).isActive = true
-        sendButton.isHidden = true
-        
-        view.addSubview(categoryCollection)
-        categoryCollection.bottomAnchor.constraint(equalTo: tapBarView.topAnchor, constant: 0).isActive = true
-        categoryCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        categoryCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        categoryCollection.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        textFieldBottomConstraint = tapBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
-        textFieldBottomConstraint?.isActive = true
-
-        fetchData()
-    }
-    
     //MARK: - 키보드 NotificationCenter
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -189,7 +145,7 @@ class TodoViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    //MARK: - 메서드
+    //MARK: - 메서드 선언
     // CoreData에 있는 값을 호출하는 방법
     func fetchData() {
         do {
@@ -210,7 +166,6 @@ class TodoViewController: UIViewController {
         
         let newTodo = Todo(context: self.context)
         newTodo.title = text
-//        newTodo.id = 
         newTodo.isCompleted = true
         newTodo.section = "daily"
         
@@ -228,7 +183,6 @@ class TodoViewController: UIViewController {
         }
     }
     
-    //MARK: - Objc 메서드
     @objc func checkFinishedTapped(_ sender: UIButton) {
         sender.animateButton(sender)
         
@@ -275,8 +229,74 @@ class TodoViewController: UIViewController {
     }
 }
 
-//MARK: - UITableViewDataSource
+    //MARK: - ViewLoad 시점
+extension TodoViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+                
+        todoTableView.dataSource = self
+        todoTableView.delegate = self
 
+        view.addSubview(todoTableView)
+        todoTableView.frame = view.bounds
+        
+        let stack = UIStackView(arrangedSubviews: [checkFinishedButton, messageTextField])
+        stack.axis = .horizontal
+        stack.spacing = 5
+        stack.distribution = .fillProportionally
+        
+        view.addSubview(tapBarView)
+        tapBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tapBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tapBarView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        
+        tapBarView.addSubview(stack)
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.centerXAnchor.constraint(equalTo: tapBarView.centerXAnchor, constant: 0).isActive = true
+        stack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
+        stack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
+        tapBarView.bottomAnchor.constraint(equalTo: stack.bottomAnchor, constant: 30).isActive = true
+        
+        tapBarView.addSubview(sendButton)
+        sendButton.trailingAnchor.constraint(equalTo: messageTextField.trailingAnchor, constant: -10).isActive = true
+        sendButton.topAnchor.constraint(equalTo: messageTextField.topAnchor).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: messageTextField.bottomAnchor).isActive = true
+        sendButton.isHidden = true
+        
+        view.addSubview(categoryCollection)
+        categoryCollection.bottomAnchor.constraint(equalTo: tapBarView.topAnchor, constant: 0).isActive = true
+        categoryCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        categoryCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        categoryCollection.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        textFieldBottomConstraint = tapBarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0)
+        textFieldBottomConstraint?.isActive = true
+
+        fetchData()
+    }
+}
+
+    //MARK: - UITableViewDelegate
+extension TodoViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "삭제하기") { (action, view, completionHandler) in
+            let remove = self.todos?[indexPath.row]
+            if let remove = remove {
+                self.context.delete(remove)
+            }
+            do {
+                try self.context.save()
+            }
+            catch {
+            }
+            self.fetchData()
+        }
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+}
+
+    //MARK: - UITableViewDataSource
 extension TodoViewController: UITableViewDataSource {
     
     // 카테고리 구분
@@ -328,36 +348,19 @@ extension TodoViewController: UITableViewDataSource {
     }
 }
 
-//MARK: - UITableViewDelegate
-extension TodoViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "삭제하기") { (action, view, completionHandler) in
-            let remove = self.todos?[indexPath.row]
-            if let remove = remove {
-                self.context.delete(remove)
-            }
-            do {
-                try self.context.save()
-            }
-            catch {
-            }
-            self.fetchData()
-        }
-        return UISwipeActionsConfiguration(actions: [delete])
-    }
-}
-
+    //MARK: - UITextFieldDelegate
 extension TodoViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         messageTextField.resignFirstResponder()
     }
 }
 
+    //MARK: - UICollectionViewDelegate
 extension TodoViewController: UICollectionViewDelegate {
     
 }
 
+    //MARK: - UICollectionViewDataSource
 extension TodoViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return Categories.allCases.count
